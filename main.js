@@ -47,7 +47,7 @@ const perguntas = [
                 texto: "Faz um toque surpresa para o fundo da quadra adversária.",
                 afirmacao: "O toque surpresa para o fundo da quadra adversária foi interceptado. Ponto para o adversário.",
                 pontos: 0
-            }            
+            }
         ]
     },
     {
@@ -82,31 +82,40 @@ const perguntas = [
     }
 ];
 
-const atual = 0;
-let perguntaAtual;
+let atual = 0;
 let historiaFinal = "";
 
-function mostraPergunta(){
-    perguntaAtual = perguntas[atual];
-    caixaPerguntas.textContent = perguntaAtual.enunciado;
-    caixaAlternativas.textContent = "";
-    mostraAlternativas();
-}
-
-function mostraAlternativas(){
-    for(const alternativa of perguntaAtual.alternativas){
-        const botaoAlternativas = document.createElement("button");
-        botaoAlternativas.textContent = alternativas.texto;
-        botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
-        caixaAlternativas.appendChild(botaoAlternativas)
+function mostraPergunta() {
+    if (atual < perguntas.length) {
+        const perguntaAtual = perguntas[atual];
+        caixaPerguntas.textContent = perguntaAtual.enunciado;
+        caixaAlternativas.innerHTML = "";
+        mostraAlternativas(perguntaAtual);
+    } else {
+        exibirResultadoFinal();
     }
 }
 
-function respostaSelecionada(opcaoSelecionada){
-    const afirmacao = opcaoSelecionada.afirmacao;
-    historiaFinal = afirmacao;
+function mostraAlternativas(perguntaAtual) {
+    for (const alternativa of perguntaAtual.alternativas) {
+        const botaoAlternativas = document.createElement("button");
+        botaoAlternativas.textContent = alternativa.texto;
+        botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
+        caixaAlternativas.appendChild(botaoAlternativas);
+    }
+}
+
+function respostaSelecionada(opcaoSelecionada) {
+    historiaFinal = opcaoSelecionada.afirmacao;
+    caixaResultado.textContent = historiaFinal;
     atual++;
     mostraPergunta();
+}
+
+function exibirResultadoFinal() {
+    caixaPerguntas.textContent = "Quiz finalizado!";
+    caixaAlternativas.innerHTML = "";
+    textoResultado.textContent = "Obrigado por participar!";
 }
 
 mostraPergunta();
